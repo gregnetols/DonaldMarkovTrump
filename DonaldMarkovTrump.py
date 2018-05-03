@@ -20,10 +20,11 @@ def main():
             else:
                 markov_chain.add_transition(split_tweet[idx-1], word)
 
+    markov_chain.create_sentence(markov_chain.get_state("The"))
+
 
 if __name__ == "__main__":
     main()
 
 
 
- 

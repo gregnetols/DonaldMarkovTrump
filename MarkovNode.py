@@ -1,3 +1,5 @@
+import random
+
 class MarkovState(object):
     def __init__(self, state):
         self.state = state
@@ -21,11 +23,15 @@ class MarkovState(object):
     def get_occurences(self, neighbor):
         return self.adjacent[neighbor]
 
+    def get_neighbors(self):
+        return self.adjacent
+
 
 class MarkovProcess(object):
     def __init__(self):
         self.state_dict = {}
         self.num_states = 0
+        self.start_states = []
 
     def __iter__(self):
         return iter(self.state_dict.values())
@@ -49,10 +55,44 @@ class MarkovProcess(object):
             self.add_state(to)
 
         self.state_dict[frm].add_neighbor(self.state_dict[to])
-        #self.state_dict[to].add_neighbor(self.state_dict[frm])
 
     def get_states(self):
         return self.state_dict.keys()
+
+    def transition_states(self, state):
+        neighbor_dict = state.get_neighbors()
+
+        value_sum = 0
+        for key in neighbor_dict:
+            value = neighbor_dict[key]
+            value_sum += value
+
+        next_state_number = random.randint(0, value_sum)
+
+        value_sum = 0
+        for key in neighbor_dict:
+            value = neighbor_dict[key]
+            value_sum += value
+            if value_sum >= next_state_number:
+                return key
+
+        return None
+
+    def create_sentence(self, starting_state):
+        current_state = starting_state
+        print("")
+        print(current_state.state, end=" ")
+
+        while current_state.state != '':
+
+            next_state = self.transition_states(current_state)
+
+            print(next_state.state, end=" ")
+
+            current_state = next_state
+
+        print("")
+
 
 
 if __name__ == '__main__':
@@ -78,9 +118,16 @@ if __name__ == '__main__':
     markov_chain.add_transition('my', 'lap')
     markov_chain.add_transition('lap', '')
 
+    next_state = markov_chain.transition_states(markov_chain.get_state("a"))
+
+    print(markov_chain.get_state("a"))
+    print(next_state)
+
+    markov_chain.create_sentence(markov_chain.get_state("a"))
 
 
 
+"""
     for v in markov_chain:
         for w in v.get_connections():
             vid = v.get_state()
@@ -93,5 +140,8 @@ if __name__ == '__main__':
     for v in markov_chain:
         print(v.adjacent)
 
+    node = markov_chain.get_state('a')
+    print(node.get_neighbors())
+"""
 
 
