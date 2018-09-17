@@ -6,7 +6,7 @@ def tweet_history():
     tweets = []
 
     row_number = 0
-    for line in open('TrumpTweets.txt'):
+    for line in open('TrumpTweets.txt', encoding='utf-8'):
         row_number += 1
 
         line = line.split(',')

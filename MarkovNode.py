@@ -78,21 +78,27 @@ class MarkovProcess(object):
 
         return None
 
-    def create_sentence(self, starting_state):
+    def print_sentence(self, starting_state):
         current_state = starting_state
         print("")
-        print(current_state.state, end=" ")
 
-        while current_state.state != '':
+        while len(self.get_state(current_state.state).adjacent) != 0:
 
-            next_state = self.transition_states(current_state)
-
-            print(next_state.state, end=" ")
-
-            current_state = next_state
+            print(current_state.state, end=" ")
+            current_state = self.transition_states(current_state)
 
         print("")
 
+    def create_sentence(self, starting_state):
+        current_state = starting_state
+        sentence_list = []
+
+        while len(self.get_state(current_state.state).adjacent) != 0:
+            sentence_list.append(current_state.state)
+
+            current_state = self.transition_states(current_state)
+
+        return ' '.join(sentence_list)
 
 
 if __name__ == '__main__':
